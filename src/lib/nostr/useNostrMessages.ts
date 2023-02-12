@@ -15,12 +15,15 @@ export function useNostrMessages({ onEvent, onNotice, onEose }: Params) {
       switch (data[0] as MessageTypeToClient) {
         case "EVENT": {
           onEvent?.(data[2] as NostrEvent);
+          break;
         }
         case "NOTICE": {
           onNotice?.(data[1] as string);
+          break;
         }
         case "EOSE": {
           onEose?.();
+          break;
         }
         case "OK":
         case "AUTH": {

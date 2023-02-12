@@ -5,11 +5,10 @@ import clsx from "clsx";
 import { Button } from "@camome/core/Button";
 import { Textarea } from "@camome/core/Textarea";
 import { useForm } from "react-hook-form";
-import { useNostrSubscription } from "@/lib/nostr/useNostrEvent";
+import { useNostrSubscription } from "@/lib/nostr/useNostrSubscription";
 import { eventKind } from "@/lib/nostr/types";
 
 import styles from "./Feed.module.scss";
-import { useNostrMessages } from "@/lib/nostr/useNostrMessages";
 import { useAtomValue } from "jotai";
 import { notesAtom } from "@/app/store";
 
@@ -25,13 +24,9 @@ export default function Feed(props: Props) {
   const [pubKeys, setPubKeys] = React.useState("");
 
   useNostrSubscription({
-    filters: [
-      {
-        authors: pubKeys.split("\n"),
-        kinds: [eventKind.Note],
-        limit: 10,
-      },
-    ],
+    authors: pubKeys.split("\n"),
+    kinds: [eventKind.Note],
+    limit: 10,
   });
 
   return (

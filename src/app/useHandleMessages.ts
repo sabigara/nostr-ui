@@ -13,6 +13,7 @@ export function useHandleMessages() {
       switch (e.kind) {
         case eventKind.Note: {
           setNotes((curr) => uniqBy([...curr, e], (item) => item.id));
+          break;
         }
         case eventKind.Contacts: {
           setContacts((curr) => uniqBy([...curr, e], (item) => item.id));
@@ -21,6 +22,9 @@ export function useHandleMessages() {
         default:
           break;
       }
+    },
+    onNotice(errorMsg) {
+      console.error(errorMsg);
     },
   });
 }
