@@ -1,8 +1,8 @@
 import { Filter, MessageClose, MessageReq } from "@/lib/nostr/types";
-import hash from "object-hash";
+import { uid } from "@/lib/uid";
 
 export function makeMessageReq(...filter: Filter[]): MessageReq {
-  return ["REQ", hash(filter), ...filter];
+  return ["REQ", uid(), ...filter];
 }
 
 export function makeMessageClose(subscriptionId: string): MessageClose {

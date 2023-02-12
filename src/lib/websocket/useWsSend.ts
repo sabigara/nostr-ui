@@ -2,24 +2,38 @@ import { useWs } from "@/lib/websocket/store";
 import { useWsEventHandlers } from "@/lib/websocket/useWsEventHandlers";
 import React from "react";
 
-export function useWsSend<T>(data: T) {
+type Options = {
+  cacheKey?: string;
+  staleSec?: number;
+};
+
+export function useWsSend<T>(data: T, { cacheKey, staleSec }: Options = {}) {
   const ws = useWs();
-  const [sent, setSent] = React.useState<string | null>(null);
-  const sentRef = React.useRef<string | null>(null);
+  const cacheKeyRef = React.useRef<string | null>(null);
+  const lastSentRef = React.useRef<number | null>(null);
+
+  const isStale = React.useCallback(() => {
+    if (!staleSec) return false;
+    return (
+      !!lastSentRef.current &&
+      Date.now() - lastSentRef.current > staleSec * 1000
+    );
+  }, [staleSec]);
 
   const send = React.useCallback(() => {
     if (!data) return;
     // TODO: more efficient and reliable way to compare values
     const serialized = JSON.stringify(data);
-    if (!ws || sentRef.current === serialized) return;
+    const isSameMsg = cacheKeyRef.current === (cacheKey ?? serialized);
+    if (!ws || (isSameMsg && !isStale())) return;
     ws.send(serialized);
-    setSent(serialized);
-    sentRef.current = serialized;
-  }, [data, ws]);
+    cacheKeyRef.current = cacheKey ?? serialized;
+    lastSentRef.current = Date.now();
+  }, [data, isStale, cacheKey, ws]);
 
   React.useEffect(() => {
     send();
-  }, [data, send]);
+  }, [data, isStale, send]);
 
   useWsEventHandlers({
     onOpen() {
@@ -27,5 +41,5 @@ export function useWsSend<T>(data: T) {
     },
   });
 
-  return { send, sent };
+  return { send };
 }

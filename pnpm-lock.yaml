@@ -11,6 +11,7 @@ specifiers:
   '@types/object-hash': ^3.0.2
   '@types/react': 18.0.27
   '@types/react-dom': 18.0.10
+  clsx: ^1.2.1
   eslint: 8.33.0
   eslint-config-next: 13.1.6
   jotai: ^2.0.1
@@ -35,6 +36,7 @@ dependencies:
   '@types/node': 18.13.0
   '@types/react': 18.0.27
   '@types/react-dom': 18.0.10
+  clsx: 1.2.1
   eslint: 8.33.0
   eslint-config-next: 13.1.6_4vsywjlpuriuw3tl5oq6zy5a64
   jotai: 2.0.1_react@18.2.0

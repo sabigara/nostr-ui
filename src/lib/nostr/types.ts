@@ -6,8 +6,8 @@ export const messageTypesToClient = [
   "OK",
   "AUTH",
 ] as const;
-export type MessageTypeToRelay = typeof messageTypesToRelay[number];
-export type MessageTypeToClient = typeof messageTypesToClient[number];
+export type MessageTypeToRelay = (typeof messageTypesToRelay)[number];
+export type MessageTypeToClient = (typeof messageTypesToClient)[number];
 
 type Message<
   Type extends MessageTypeToRelay | MessageTypeToClient,
@@ -34,15 +34,16 @@ export const eventKind = {
 } as const;
 
 export type EventKind = keyof typeof eventKind;
-export type EventKindNum = typeof eventKind[EventKind];
+export type EventKindNum = (typeof eventKind)[EventKind];
 
-export type Note = {
+export type NostrEvent = {
   id: string;
   pubkey: string;
   created_at: number;
   kind: EventKindNum;
   content: string;
   sig: string;
+  tags: [string, string][];
 };
 
 export type Filter = {

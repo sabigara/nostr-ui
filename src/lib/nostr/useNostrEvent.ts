@@ -1,46 +1,29 @@
-import { notesAtom } from "@/app/feed/store";
 import { makeMessageClose, makeMessageReq } from "@/lib/nostr/message";
-import { Filter } from "@/lib/nostr/types";
+import { Filter, MessageTypeToClient } from "@/lib/nostr/types";
 import { useWs } from "@/lib/websocket/store";
 import { useWsEventHandlers } from "@/lib/websocket/useWsEventHandlers";
-import { useWsSend } from "@/lib/websocket/useWsSend";
-import { useAtom } from "jotai";
-import uniqBy from "lodash.uniqby";
+import objectHash from "object-hash";
 import React from "react";
 
 type Params = {
   filters: Filter[];
-  enabled?: boolean;
-  // onEvent:
 };
 
 // TODO: support resources other than note
-export function useNostrEvent({ filters, enabled = true }: Params) {
-  const [notes, setNotes] = useAtom(notesAtom);
+export function useNostrSubscription({ filters }: Params) {
+  const cacheKeyRef = React.useRef<string | null>(null);
   const ws = useWs();
-  const req = makeMessageReq(...filters);
 
-  useWsEventHandlers({
-    onMessage(msg) {
-      const data = JSON.parse(msg.data);
-      if (data[0] === "EVENT") {
-        setNotes((curr) =>
-          uniqBy([...curr, data[2]], (item) => item.id).sort(
-            (a, b) => b.created_at - a.created_at
-          )
-        );
-      }
-    },
-  });
-
-  useWsSend(enabled ? req : null);
-
-  const close = React.useCallback(() => {
-    // TODO: make sure message is sent
-    if (ws) {
-      ws.send(JSON.stringify(makeMessageClose(req[1])));
-    }
-  }, [req, ws]);
-
-  return { close, notes };
+  React.useEffect(() => {
+    const cacheKey = objectHash(filters);
+    if (cacheKey === cacheKeyRef.current) return;
+    const req = makeMessageReq(...filters);
+    console.log("Subscribe:", req[2]);
+    ws?.send(JSON.stringify(req));
+    cacheKeyRef.current = cacheKey;
+    return () => {
+      console.log("Unsubscribe:", req[2]);
+      ws?.send(JSON.stringify(makeMessageClose(req[1])));
+    };
+  }, [filters, ws]);
 }
