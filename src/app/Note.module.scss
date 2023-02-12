@@ -1,0 +1,36 @@
+.container {
+  display: flex;
+  padding: 1rem;
+  gap: 1rem;
+  min-height: 6rem;
+
+  :global {
+    .Avatar {
+      --cmm-Avatar-size: 2.5rem;
+    }
+  }
+}
+
+.left {
+}
+
+.right {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.header {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.name {
+  font-weight: var(--cmm-font-weight-bold);
+  line-height: 1.1;
+}
+
+.content {
+  flex: 1;
+}

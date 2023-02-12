@@ -1,23 +1,26 @@
 "use client";
 
 import Feed from "@/app/Feed";
-import { atomFollowingAuthors } from "@/app/store";
-import { useHandleMessages } from "@/app/useHandleMessages";
-import { useLoginUser } from "@/app/useLoginUser";
+import { flattenPubKeysFromContacts } from "@/lib/nostr/event/selectors";
+import { queries } from "@/lib/query/queries";
+import { useWs } from "@/lib/websocket/store";
 import { useWsConnection } from "@/lib/websocket/useWsConnection";
 import { TextInput } from "@camome/core/TextInput";
+import { useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
-import { useAtomValue } from "jotai";
 import React from "react";
 import styles from "./page.module.css";
 
 export default function Home() {
   const [pubKey, setPubKey] = React.useState("");
-  const following = useAtomValue(atomFollowingAuthors);
+  const ws = useWs();
+  const { data } = useQuery({
+    ...queries.contacts.authors(ws!, [pubKey]),
+    enabled: !!ws && !!pubKey,
+  });
+  const following = data ? flattenPubKeysFromContacts(data) : [];
 
-  useWsConnection("wss://relay.damus.io", { log: true });
-  useHandleMessages();
-  useLoginUser(pubKey);
+  useWsConnection("wss://relay.snort.social", { log: true });
 
   return (
     <main className={clsx(styles.main, "stack")}>
