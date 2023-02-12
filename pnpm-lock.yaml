@@ -7,7 +7,9 @@ specifiers:
   '@lukemorales/query-key-factory': ^1.1.0
   '@next/font': 13.1.6
   '@swc-jotai/react-refresh': ^0.0.4
+  '@tanstack/query-sync-storage-persister': ^4.24.6
   '@tanstack/react-query': ^4.24.6
+  '@tanstack/react-query-persist-client': ^4.24.6
   '@types/lodash.uniqby': ^4.7.7
   '@types/node': 18.13.0
   '@types/object-hash': ^3.0.2
@@ -36,7 +38,9 @@ dependencies:
   '@camome/utils': 0.1.10
   '@lukemorales/query-key-factory': 1.1.0
   '@next/font': 13.1.6
+  '@tanstack/query-sync-storage-persister': 4.24.6
   '@tanstack/react-query': 4.24.6_biqbaboplfbrettd7655fr4n2y
+  '@tanstack/react-query-persist-client': 4.24.6_bjksgqi67jvd6huprrxy2rqkiq
   '@types/node': 18.13.0
   '@types/react': 18.0.27
   '@types/react-dom': 18.0.10
@@ -548,6 +552,27 @@ packages:
 
   /@tanstack/query-core/4.24.6:
     resolution: {integrity: sha512-Tfru6YTDTCpX7dKVwHp/sosw/dNjEdzrncduUjIkQxn7n7u+74HT2ZrGtwwrU6Orws4x7zp3FKRqBPWVVhpx9w==}
+    dev: false
+
+  /@tanstack/query-persist-client-core/4.24.6:
+    resolution: {integrity: sha512-TuYToMbnWJcl2FUu6DYR9L8FHpySaIwVhIGWgiG5lkFQYyympg/l1ShaTHsZ9Pbu7ff1Z+XD9u0oy+YcPpTZdg==}
+    dependencies:
+      '@tanstack/query-core': 4.24.6
+    dev: false
+
+  /@tanstack/query-sync-storage-persister/4.24.6:
+    resolution: {integrity: sha512-B93yj2jjOJ0y22u+IGBvv7BI6xg4L5jzXnz8N75W2fJgWJhxUwc6QsKcudCg8atBVy1fMpCxQ3OeoCX9L0GNew==}
+    dependencies:
+      '@tanstack/query-persist-client-core': 4.24.6
+    dev: false
+
+  /@tanstack/react-query-persist-client/4.24.6_bjksgqi67jvd6huprrxy2rqkiq:
+    resolution: {integrity: sha512-I42pqZ1QdFTaz2lg5YVYgv8V1MccurzkY8ZpFvqaoO+GIRVsuX+i40U+RHAYQvTvumPjJa/q5L4oiqxY6/iwDQ==}
+    peerDependencies:
+      '@tanstack/react-query': 4.24.6
+    dependencies:
+      '@tanstack/query-persist-client-core': 4.24.6
+      '@tanstack/react-query': 4.24.6_biqbaboplfbrettd7655fr4n2y
     dev: false
 
   /@tanstack/react-query/4.24.6_biqbaboplfbrettd7655fr4n2y:
