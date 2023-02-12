@@ -5,6 +5,17 @@ import { createQueryKeyStore } from "@lukemorales/query-key-factory";
 
 // TODO: support limit
 export const queries = createQueryKeyStore({
+  keys: {
+    all: {
+      queryKey: null,
+      queryFn: async () => {
+        const pubKey = await window.nostr?.getPublicKey();
+        return {
+          public: pubKey ?? null,
+        };
+      },
+    },
+  },
   metadata: {
     authors: (ws: WebSocket, authors: string[]) => ({
       queryKey: [ws, authors],

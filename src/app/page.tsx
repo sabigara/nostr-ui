@@ -8,15 +8,16 @@ import { useWsConnection } from "@/lib/websocket/useWsConnection";
 import { TextInput } from "@camome/core/TextInput";
 import { useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
-import React from "react";
 import styles from "./page.module.css";
 
 export default function Home() {
-  const [pubKey, setPubKey] = React.useState("");
+  const { data: keys } = useQuery({
+    ...queries.keys.all,
+  });
   const ws = useWs();
   const { data } = useQuery({
-    ...queries.contacts.authors(ws!, [pubKey]),
-    enabled: !!ws && !!pubKey,
+    ...queries.contacts.authors(ws!, [keys!.public!]),
+    enabled: !!ws && !!keys?.public,
   });
   const following = data ? flattenPubKeysFromContacts(data) : [];
 
@@ -24,11 +25,7 @@ export default function Home() {
 
   return (
     <main className={clsx(styles.main, "stack")}>
-      <TextInput
-        label="Pub key"
-        onChange={(e) => void setPubKey(e.target.value)}
-        fill
-      />
+      <TextInput label="Pub key" value={keys?.public ?? ""} readOnly fill />
       <Feed authors={following} limit={25} className={styles.feed} />
     </main>
   );
