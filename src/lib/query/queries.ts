@@ -9,6 +9,10 @@ export const queries = createQueryKeyStore({
     all: {
       queryKey: null,
       queryFn: async () => {
+        if (typeof window === "undefined")
+          return {
+            public: null,
+          };
         const pubKey = await window.nostr?.getPublicKey();
         return {
           public: pubKey ?? null,
