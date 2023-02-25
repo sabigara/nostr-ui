@@ -19,7 +19,7 @@ type Params = {
 export function useNostrSubscription({
   filters,
   unsubscribeOnEose = true,
-  staleSeconds = 60 * 60 * 24,
+  staleSeconds = 60 * 60 * 24, // Defaults to a day
   enabled = true,
 }: Params) {
   const pool = useWsPool();
@@ -39,7 +39,7 @@ export function useNostrSubscription({
 
     let subscribing = false;
 
-    db.cache.get(hash).then((cache) => {
+    db.queryCache.get(hash).then((cache) => {
       if (
         staleSeconds &&
         cache?.fetchedAt &&
@@ -68,8 +68,8 @@ export function useNostrSubscription({
       if ((data[0] as MessageTypeToClient) === "EOSE" && data[1] === req[1]) {
         eoseCount++;
         if (eoseCount >= pool.count) {
-          db.cache.put({
-            id: hash,
+          db.queryCache.put({
+            key: hash,
             fetchedAt: Date.now(),
           });
           if (unsubscribeOnEose) {

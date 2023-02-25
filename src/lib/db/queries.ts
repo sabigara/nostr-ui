@@ -27,6 +27,6 @@ export async function nostrFiltersToDbQuery(...filters: Filter[]) {
 }
 
 export type QueryCache = {
-  id: string;
+  key: string;
   fetchedAt: number;
 };
