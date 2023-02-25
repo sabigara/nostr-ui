@@ -1,13 +1,20 @@
-import { handleMessageEvent, makeMessageClose } from "@/lib/nostr/message";
-import { MessageReq, NostrEvent } from "@/lib/nostr/types";
+import {
+  handleMessageEvent,
+  makeMessageClose,
+  makeMessageReq,
+} from "@/lib/nostr/message";
+import { Filter, MessageReq, NostrEvent } from "@/lib/nostr/types";
+import { uid } from "@/lib/uid";
+import { WsPool } from "@/lib/websocket/types";
+import uniqBy from "lodash.uniqby";
 
-export function fetchNostrEvents(
+export function fetchNostrEventsSingleRelay(
   ws: WebSocket,
-  req: MessageReq
+  ...filters: Filter[]
 ): Promise<NostrEvent[]> {
   return new Promise<NostrEvent[]>((resolve, reject) => {
     const results: NostrEvent[] = [];
-    const subscriptionId = req[1];
+    const subscriptionId = ws.url + "-" + uid();
     const cleanup = () => {
       ws.send(JSON.stringify(makeMessageClose(subscriptionId)));
       ws.removeEventListener("message", handleMessage);
@@ -31,6 +38,18 @@ export function fetchNostrEvents(
       });
     };
     ws.addEventListener("message", handleMessage);
-    ws.send(JSON.stringify(req));
+    ws.send(JSON.stringify(makeMessageReq(subscriptionId, ...filters)));
   });
+}
+
+export async function fetchNostrEvents(
+  pool: WsPool,
+  ...filters: Filter[]
+): Promise<NostrEvent[]> {
+  const resp = await Promise.all(
+    Object.values(pool.registry).map((ws) =>
+      fetchNostrEventsSingleRelay(ws, ...filters)
+    )
+  );
+  return uniqBy(resp.flat(), (e) => e.id);
 }

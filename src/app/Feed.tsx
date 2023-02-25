@@ -1,28 +1,34 @@
 "use client";
 
-import { queries } from "@/lib/query/queries";
-import { useQuery } from "@tanstack/react-query";
-import { useWs } from "@/lib/websocket/store";
 import Note from "@/app/Note";
 import clsx from "clsx";
 
 import styles from "./Feed.module.scss";
+import { useNostrSubscription } from "@/lib/nostr/useNostrSubscription";
+import { eventKind } from "@/lib/nostr/types";
 
 type Props = {
   authors: string[];
-  limit?: number;
   className?: string;
 };
 
-export default function Feed({ authors, limit = 10, className }: Props) {
-  const ws = useWs();
-  const { data: notes } = useQuery({
-    ...queries.notes.authors(ws!, authors),
-    enabled: !!ws,
+export default function Feed({ authors, className }: Props) {
+  const notes = useNostrSubscription({
+    filters: [
+      {
+        authors,
+        kinds: [eventKind.Note],
+        limit: 20,
+      },
+    ],
+    unsubscribeOnEose: false,
+    staleSeconds: 0,
+    enabled: !!authors.length,
   });
 
   return (
     <ul className={clsx(styles.list, className)}>
+      {/* TODO: should sort inside queryFn? */}
       {notes?.map((note) => (
         <Note author={note.pubkey} content={note.content} key={note.id} />
       ))}

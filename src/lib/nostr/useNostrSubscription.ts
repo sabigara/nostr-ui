@@ -1,21 +1,91 @@
 import { makeMessageClose, makeMessageReq } from "@/lib/nostr/message";
-import { Filter } from "@/lib/nostr/types";
-import { useWs } from "@/lib/websocket/store";
+import { Filter, MessageTypeToClient } from "@/lib/nostr/types";
+import { useWsPool } from "@/lib/websocket/store";
+import objectHash from "object-hash";
 import React from "react";
+import { useLiveQuery } from "dexie-react-hooks";
+import { nostrFiltersToDbQuery } from "@/lib/db/queries";
+import { db } from "@/lib/db/db";
 
-export function useNostrSubscription(...filters: Filter[]) {
-  const ws = useWs();
+const dedupeSet = new Set<string>();
+
+type Params = {
+  filters: Filter[];
+  unsubscribeOnEose?: boolean;
+  staleSeconds?: number;
+  enabled?: boolean;
+};
+
+export function useNostrSubscription({
+  filters,
+  unsubscribeOnEose = true,
+  staleSeconds = 60 * 60 * 24,
+  enabled = true,
+}: Params) {
+  const pool = useWsPool();
+  const hash = objectHash(filters);
   const serialized = JSON.stringify(filters);
+  const events = useLiveQuery(() => {
+    const parsed = JSON.parse(serialized);
+    return nostrFiltersToDbQuery(...parsed);
+  }, [serialized]);
 
   React.useEffect(() => {
+    if (!enabled || pool.count === 0 || dedupeSet.has(hash)) return;
+
     const parsed = JSON.parse(serialized);
-    const req = makeMessageReq(...parsed);
-    console.log("Subscribe:", req[2]);
-    ws?.send(JSON.stringify(req));
+    const req = makeMessageReq(undefined, ...parsed);
+    dedupeSet.add(hash);
+
+    let subscribing = false;
+
+    db.cache.get(hash).then((cache) => {
+      if (
+        staleSeconds &&
+        cache?.fetchedAt &&
+        Date.now() - cache?.fetchedAt <= staleSeconds * 1000
+      ) {
+        console.log("Sub [cache-hit]:", req[2]);
+        return;
+      }
+      console.log("Sub [cache-miss]:", req[2]);
+      pool.send(JSON.stringify(req));
+      subscribing = true;
+    });
+
+    const unsubscribe = () => {
+      dedupeSet.delete(hash);
+      if (subscribing) {
+        console.log("Unsub:", req[2]);
+        pool.send(JSON.stringify(makeMessageClose(req[1])));
+      }
+    };
+
+    // TODO: is this correct?
+    let eoseCount = 0;
+    const handleMessage = (e: MessageEvent) => {
+      const data = JSON.parse(e.data);
+      if ((data[0] as MessageTypeToClient) === "EOSE" && data[1] === req[1]) {
+        eoseCount++;
+        if (eoseCount >= pool.count) {
+          db.cache.put({
+            id: hash,
+            fetchedAt: Date.now(),
+          });
+          if (unsubscribeOnEose) {
+            unsubscribe();
+          }
+        }
+      }
+    };
+
+    pool.addEventListener("message", handleMessage);
 
     return () => {
-      console.log("Unsubscribe:", req[2]);
-      ws?.send(JSON.stringify(makeMessageClose(req[1])));
+      pool.removeEventListener("message", handleMessage);
+      unsubscribe();
     };
-  }, [serialized, ws]);
+  }, [serialized, pool, hash, unsubscribeOnEose, staleSeconds, enabled]);
+
+  return events;
 }

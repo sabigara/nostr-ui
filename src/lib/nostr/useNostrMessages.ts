@@ -4,7 +4,7 @@ import { useWsEventHandlers } from "@/lib/websocket/useWsEventHandlers";
 type Params = {
   onEvent?: (e: NostrEvent) => void;
   onNotice?: (errorMsg: string) => void;
-  onEose?: () => void;
+  onEose?: (subscriptionId: string) => void;
 };
 
 export function useNostrMessages({ onEvent, onNotice, onEose }: Params) {
@@ -22,7 +22,7 @@ export function useNostrMessages({ onEvent, onNotice, onEose }: Params) {
           break;
         }
         case "EOSE": {
-          onEose?.();
+          onEose?.(data[1]);
           break;
         }
         case "OK":

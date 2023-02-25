@@ -1,0 +1,14 @@
+.container {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+
+  input {
+    flex: 1;
+  }
+
+  button {
+    width: 5.5rem;
+    font-size: var(--cmm-font-size-sm);
+  }
+}

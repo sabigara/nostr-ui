@@ -1,24 +1,24 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@camome/core': ^0.0.24
+  '@camome/core': ^0.0.28
   '@camome/system': ^0.1.23
   '@camome/utils': ^0.1.10
-  '@lukemorales/query-key-factory': ^1.1.0
   '@next/font': 13.1.6
   '@swc-jotai/react-refresh': ^0.0.4
-  '@tanstack/query-sync-storage-persister': ^4.24.6
-  '@tanstack/react-query': ^4.24.6
-  '@tanstack/react-query-persist-client': ^4.24.6
   '@types/lodash.uniqby': ^4.7.7
   '@types/node': 18.13.0
   '@types/object-hash': ^3.0.2
   '@types/react': 18.0.27
   '@types/react-dom': 18.0.10
   clsx: ^1.2.1
+  dexie: ^3.2.3
+  dexie-react-hooks: ^1.1.1
   eslint: 8.33.0
   eslint-config-next: 13.1.6
+  immer: ^9.0.19
   jotai: ^2.0.1
+  jotai-immer: ^0.2.0
   lodash.uniqby: ^4.7.0
   mitt: ^3.0.0
   nanoid: ^4.0.1
@@ -33,21 +33,21 @@ specifiers:
   uniqby: link:@types/lodash/uniqby
 
 dependencies:
-  '@camome/core': 0.0.24_react@18.2.0
+  '@camome/core': 0.0.28_react@18.2.0
   '@camome/system': 0.1.23
   '@camome/utils': 0.1.10
-  '@lukemorales/query-key-factory': 1.1.0
   '@next/font': 13.1.6
-  '@tanstack/query-sync-storage-persister': 4.24.6
-  '@tanstack/react-query': 4.24.6_biqbaboplfbrettd7655fr4n2y
-  '@tanstack/react-query-persist-client': 4.24.6_bjksgqi67jvd6huprrxy2rqkiq
   '@types/node': 18.13.0
   '@types/react': 18.0.27
   '@types/react-dom': 18.0.10
   clsx: 1.2.1
+  dexie: 3.2.3
+  dexie-react-hooks: 1.1.1_rrjep4i3y45rkadjp7pvaa6nvq
   eslint: 8.33.0
   eslint-config-next: 13.1.6_4vsywjlpuriuw3tl5oq6zy5a64
+  immer: 9.0.19
   jotai: 2.0.1_react@18.2.0
+  jotai-immer: 0.2.0_qx7h2rdrhodrmc43aij3wakwf4
   lodash.uniqby: 4.7.0
   mitt: 3.0.0
   nanoid: 4.0.1
@@ -75,12 +75,12 @@ packages:
       regenerator-runtime: 0.13.11
     dev: false
 
-  /@camome/core/0.0.24_react@18.2.0:
-    resolution: {integrity: sha512-32cHY1DWYER/IkoysEL+R5yaT1aowmptX4uvXn1QcWvayMnK31FxpRdnHPhd58TwRuJo7JLXTT7e5w29ANlVwg==}
+  /@camome/core/0.0.28_react@18.2.0:
+    resolution: {integrity: sha512-G8SZ+7OmVR9ildyxpzdFXjRwVgwyDkikmWhzyo/G8cwbjQfRDsMwgFGwRDsc83Knm3z3tvA46MT/v7thFmzx8A==}
     peerDependencies:
       react: '>=18'
     dependencies:
-      '@camome/system': 0.1.23
+      '@camome/system': 0.1.24
       '@camome/utils': 0.1.10
       '@heroicons/react': 2.0.14_react@18.2.0
       clsx: 1.2.1
@@ -89,6 +89,14 @@ packages:
 
   /@camome/system/0.1.23:
     resolution: {integrity: sha512-cRH8P1pzIetmgirrJUDMUn/TIE6s3L3WYDsqwjCmFygHG8ARWwi8YPpG/JntZifpD0nGqD/XKpQaoprCtTeKdQ==}
+    dependencies:
+      '@camome/utils': 0.1.10
+      deepmerge-ts: 4.3.0
+      prettier: 2.8.4
+    dev: false
+
+  /@camome/system/0.1.24:
+    resolution: {integrity: sha512-qqtZWHo8K3NEDFrl1a/Qzwgbq4kxXUqx1rkM0mHXzwxIIUH6fnkcFTNBrgYKT91IfxYcd18h+em6pANDYMtXog==}
     dependencies:
       '@camome/utils': 0.1.10
       deepmerge-ts: 4.3.0
@@ -365,13 +373,6 @@ packages:
     resolution: {integrity: sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==}
     dev: false
 
-  /@lukemorales/query-key-factory/1.1.0:
-    resolution: {integrity: sha512-9CjPb7HSsnPfa/urgb0aSzMBjwzKq3maVC9JY0Y8PDYwDRNUqnwudtyDMCAFcKZgssu9xT8QKrpByOq2IlWDWQ==}
-    engines: {node: '>=14'}
-    peerDependencies:
-      '@tanstack/query-core': ^4.0.0
-    dev: false
-
   /@next/env/13.1.6:
     resolution: {integrity: sha512-s+W9Fdqh5MFk6ECrbnVmmAOwxKQuhGMT7xXHrkYIBMBcTiOqNWhv5KbJIboKR5STXxNXl32hllnvKaffzFaWQg==}
     dev: false
@@ -548,49 +549,6 @@ packages:
     resolution: {integrity: sha512-4C7nX/dvpzB7za4Ql9K81xK3HPxCpHMgwTZVyf+9JQ6VUbn9jjZVN7/Nkdz/Ugzs2CSjqnL/UPXroiVBVHUWUw==}
     dependencies:
       tslib: 2.5.0
-    dev: false
-
-  /@tanstack/query-core/4.24.6:
-    resolution: {integrity: sha512-Tfru6YTDTCpX7dKVwHp/sosw/dNjEdzrncduUjIkQxn7n7u+74HT2ZrGtwwrU6Orws4x7zp3FKRqBPWVVhpx9w==}
-    dev: false
-
-  /@tanstack/query-persist-client-core/4.24.6:
-    resolution: {integrity: sha512-TuYToMbnWJcl2FUu6DYR9L8FHpySaIwVhIGWgiG5lkFQYyympg/l1ShaTHsZ9Pbu7ff1Z+XD9u0oy+YcPpTZdg==}
-    dependencies:
-      '@tanstack/query-core': 4.24.6
-    dev: false
-
-  /@tanstack/query-sync-storage-persister/4.24.6:
-    resolution: {integrity: sha512-B93yj2jjOJ0y22u+IGBvv7BI6xg4L5jzXnz8N75W2fJgWJhxUwc6QsKcudCg8atBVy1fMpCxQ3OeoCX9L0GNew==}
-    dependencies:
-      '@tanstack/query-persist-client-core': 4.24.6
-    dev: false
-
-  /@tanstack/react-query-persist-client/4.24.6_bjksgqi67jvd6huprrxy2rqkiq:
-    resolution: {integrity: sha512-I42pqZ1QdFTaz2lg5YVYgv8V1MccurzkY8ZpFvqaoO+GIRVsuX+i40U+RHAYQvTvumPjJa/q5L4oiqxY6/iwDQ==}
-    peerDependencies:
-      '@tanstack/react-query': 4.24.6
-    dependencies:
-      '@tanstack/query-persist-client-core': 4.24.6
-      '@tanstack/react-query': 4.24.6_biqbaboplfbrettd7655fr4n2y
-    dev: false
-
-  /@tanstack/react-query/4.24.6_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-pbJUVZCS4pcXS0kZiY+mVJ01ude0GrH5OXT2g9whcqSveRG/YVup/XdA9NdRpSMGkP2HxDRxxRNsTXkniWeIIA==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
-      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-      react-native: '*'
-    peerDependenciesMeta:
-      react-dom:
-        optional: true
-      react-native:
-        optional: true
-    dependencies:
-      '@tanstack/query-core': 4.24.6
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
-      use-sync-external-store: 1.2.0_react@18.2.0
     dev: false
 
   /@types/json5/0.0.29:
@@ -996,6 +954,23 @@ packages:
       object-keys: 1.1.1
     dev: false
 
+  /dexie-react-hooks/1.1.1_rrjep4i3y45rkadjp7pvaa6nvq:
+    resolution: {integrity: sha512-Cam5JP6PxHN564RvWEoe8cqLhosW0O4CAZ9XEVYeGHJBa6KEJlOpd9CUpV3kmU9dm2MrW97/lk7qkf1xpij7gA==}
+    peerDependencies:
+      '@types/react': '>=16'
+      dexie: '>=3.1.0-alpha.1 <5.0.0'
+      react: '>=16'
+    dependencies:
+      '@types/react': 18.0.27
+      dexie: 3.2.3
+      react: 18.2.0
+    dev: false
+
+  /dexie/3.2.3:
+    resolution: {integrity: sha512-iHayBd4UYryDCVUNa3PMsJMEnd8yjyh5p7a+RFeC8i8n476BC9wMhVvqiImq5zJZJf5Tuer+s4SSj+AA3x+ZbQ==}
+    engines: {node: '>=6.0'}
+    dev: false
+
   /dir-glob/3.0.1:
     resolution: {integrity: sha512-WkrWp9GR4KXfKGYzOLmTuGVi1UWFfws377n9cc55/tb6DuqyF6pcQ5AbiHEshaDpY9v6oaSr2XCDidGmMwdzIA==}
     engines: {node: '>=8'}
@@ -1156,7 +1131,7 @@ packages:
       eslint: 8.33.0
       eslint-import-resolver-node: 0.3.7
       eslint-import-resolver-typescript: 3.5.3_ohdts44xlqyeyrlje4qnefqeay
-      eslint-plugin-import: 2.27.5_kuqv7qxblf6fgldep4hddd7xwa
+      eslint-plugin-import: 2.27.5_eslint@8.33.0
       eslint-plugin-jsx-a11y: 6.7.1_eslint@8.33.0
       eslint-plugin-react: 7.32.2_eslint@8.33.0
       eslint-plugin-react-hooks: 4.6.0_eslint@8.33.0
@@ -1186,7 +1161,7 @@ packages:
       debug: 4.3.4
       enhanced-resolve: 5.12.0
       eslint: 8.33.0
-      eslint-plugin-import: 2.27.5_kuqv7qxblf6fgldep4hddd7xwa
+      eslint-plugin-import: 2.27.5_eslint@8.33.0
       get-tsconfig: 4.4.0
       globby: 13.1.3
       is-core-module: 2.11.0
@@ -1196,7 +1171,7 @@ packages:
       - supports-color
     dev: false
 
-  /eslint-module-utils/2.7.4_wj7ubv6viehxm3sdjw6f37lxha:
+  /eslint-module-utils/2.7.4_b5qyyy7jj6vxczv7eweintx4wu:
     resolution: {integrity: sha512-j4GT+rqzCoRKHwURX7pddtIPGySnX9Si/cgMI5ztrcqOPtk5dDEeZ34CQVPphnqkJytlc97Vuk05Um2mJ3gEQA==}
     engines: {node: '>=4'}
     peerDependencies:
@@ -1217,16 +1192,14 @@ packages:
       eslint-import-resolver-webpack:
         optional: true
     dependencies:
-      '@typescript-eslint/parser': 5.51.0_4vsywjlpuriuw3tl5oq6zy5a64
       debug: 3.2.7
       eslint: 8.33.0
       eslint-import-resolver-node: 0.3.7
-      eslint-import-resolver-typescript: 3.5.3_ohdts44xlqyeyrlje4qnefqeay
     transitivePeerDependencies:
       - supports-color
     dev: false
 
-  /eslint-plugin-import/2.27.5_kuqv7qxblf6fgldep4hddd7xwa:
+  /eslint-plugin-import/2.27.5_eslint@8.33.0:
     resolution: {integrity: sha512-LmEt3GVofgiGuiE+ORpnvP+kAm3h6MLZJ4Q5HCyHADofsb4VzXFsRiWj3c0OFiV+3DWFh0qg3v9gcPlfc3zRow==}
     engines: {node: '>=4'}
     peerDependencies:
@@ -1236,7 +1209,6 @@ packages:
       '@typescript-eslint/parser':
         optional: true
     dependencies:
-      '@typescript-eslint/parser': 5.51.0_4vsywjlpuriuw3tl5oq6zy5a64
       array-includes: 3.1.6
       array.prototype.flat: 1.3.1
       array.prototype.flatmap: 1.3.1
@@ -1244,7 +1216,7 @@ packages:
       doctrine: 2.1.0
       eslint: 8.33.0
       eslint-import-resolver-node: 0.3.7
-      eslint-module-utils: 2.7.4_wj7ubv6viehxm3sdjw6f37lxha
+      eslint-module-utils: 2.7.4_b5qyyy7jj6vxczv7eweintx4wu
       has: 1.0.3
       is-core-module: 2.11.0
       is-glob: 4.0.3
@@ -1682,6 +1654,10 @@ packages:
     engines: {node: '>= 4'}
     dev: false
 
+  /immer/9.0.19:
+    resolution: {integrity: sha512-eY+Y0qcsB4TZKwgQzLaE/lqYMlKhv5J9dyd2RhhtGhNo2njPXDqU9XPfcNfa3MIDsdtZt5KlkIsirlo4dHsWdQ==}
+    dev: false
+
   /immutable/4.2.4:
     resolution: {integrity: sha512-WDxL3Hheb1JkRN3sQkyujNlL/xRjAo3rJtaU5xeufUauG66JdMr32bLj4gF+vWl84DIA3Zxw7tiAjneYzRRw+w==}
     dev: false
@@ -1891,6 +1867,18 @@ packages:
 
   /isexe/2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
+    dev: false
+
+  /jotai-immer/0.2.0_qx7h2rdrhodrmc43aij3wakwf4:
+    resolution: {integrity: sha512-hahK8EPiROS9RoNWmX/Z8rY9WkAijspX4BZ1O7umpcwI4kPNkbcCpu/PhiQ8FMcpEcF6KmbpbMpSSj/GFmo8NA==}
+    peerDependencies:
+      immer: '*'
+      jotai: '>=1.11.0'
+      react: '>=17.0.0'
+    dependencies:
+      immer: 9.0.19
+      jotai: 2.0.1_react@18.2.0
+      react: 18.2.0
     dev: false
 
   /jotai/2.0.1_react@18.2.0:
@@ -2650,14 +2638,6 @@ packages:
     resolution: {integrity: sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==}
     dependencies:
       punycode: 2.3.0
-    dev: false
-
-  /use-sync-external-store/1.2.0_react@18.2.0:
-    resolution: {integrity: sha512-eEgnFxGQ1Ife9bzYs6VLi8/4X6CObHMw9Qr9tPY43iKwsPw8xE8+EFsf/2cFZ5S3esXgpWgtSCtLNS41F+sKPA==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
-    dependencies:
-      react: 18.2.0
     dev: false
 
   /which-boxed-primitive/1.0.2:
