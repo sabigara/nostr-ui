@@ -1,4 +1,4 @@
-import { db } from "@/lib/db/db";
+import { db } from "@/lib/storage/indexedDB";
 import { eventKind, Metadata } from "@/lib/nostr/types";
 import { useNostrMessages } from "@/lib/nostr/useNostrMessages";
 

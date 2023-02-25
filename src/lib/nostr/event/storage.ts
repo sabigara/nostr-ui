@@ -1,8 +1,8 @@
 import { Filter, NostrEvent } from "@/lib/nostr/types";
 import { Collection } from "dexie";
-import { db } from "./db";
+import { db } from "@/lib/storage/indexedDB";
 
-export async function nostrFiltersToDbQuery(...filters: Filter[]) {
+export async function queryEventsFromStorage(...filters: Filter[]) {
   const kinds = filters.flatMap((f) => f.kinds ?? []);
   const authors = filters.flatMap((f) => f.authors ?? []);
   const ids = filters.flatMap((f) => f.ids ?? []);
