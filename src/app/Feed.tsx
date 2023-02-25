@@ -12,6 +12,8 @@ type Props = {
   className?: string;
 };
 
+const since = Math.floor(Date.now() / 1000) - 60 * 60;
+
 export default function Feed({ authors, className }: Props) {
   const notes = useNostrSubscription({
     filters: [
@@ -19,10 +21,11 @@ export default function Feed({ authors, className }: Props) {
         authors,
         kinds: [eventKind.Note],
         limit: 20,
+        since,
       },
     ],
     unsubscribeOnEose: false,
-    staleSeconds: 0,
+    staleSeconds: 0, // always newly subscribe
     enabled: !!authors.length,
   });
 

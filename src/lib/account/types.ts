@@ -1,6 +1,8 @@
-import { NostrEvent } from "@/lib/nostr/types";
+import { type NostrEvent } from "@/lib/nostr/types";
 
 export type Account = {
-  pubKey: string;
-  signEvent: (event: NostrEvent) => Promise<NostrEvent>;
+  pubkey: string;
+  signEvent?: (event: NostrEvent) => Promise<NostrEvent>;
 };
+
+export type PersistedAccount = Pick<Account, "pubkey">;

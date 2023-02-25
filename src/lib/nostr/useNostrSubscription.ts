@@ -8,6 +8,7 @@ import { queryEventsFromStorage } from "@/lib/nostr/event/storage";
 import { db } from "@/lib/storage/indexedDB";
 
 const dedupeSet = new Set<string>();
+const subscriptions = new Set<string>();
 
 type Params = {
   filters: Filter[];
@@ -29,17 +30,20 @@ export function useNostrSubscription({
     const parsed = JSON.parse(serialized);
     return queryEventsFromStorage(...parsed);
   }, [serialized]);
+  const timeout = React.useRef<number>();
 
   React.useEffect(() => {
-    if (!enabled || pool.count === 0 || dedupeSet.has(hash)) return;
+    // Fix identity
+    const __hash = hash;
+
+    if (!enabled || pool.count === 0 || dedupeSet.has(__hash)) return;
 
     const parsed = JSON.parse(serialized);
     const req = makeMessageReq(undefined, ...parsed);
     dedupeSet.add(hash);
 
-    let subscribing = false;
-
-    db.queryCache.get(hash).then((cache) => {
+    const subscribe = async () => {
+      const cache = await db.queryCache.get(__hash);
       if (
         staleSeconds &&
         cache?.fetchedAt &&
@@ -48,14 +52,28 @@ export function useNostrSubscription({
         console.log("Sub [cache-hit]:", req[2]);
         return;
       }
+
+      const limit = 8;
+      const intervalMs = 5000;
+      if (subscriptions.size >= limit) {
+        console.log(
+          `Concurrent sub limit (${limit}) – retrying in ${intervalMs} ms`
+        );
+        timeout.current = window.setTimeout(subscribe, intervalMs);
+        return;
+      }
+
       console.log("Sub [cache-miss]:", req[2]);
       pool.send(JSON.stringify(req));
-      subscribing = true;
-    });
+      subscriptions.add(__hash);
+    };
+
+    subscribe();
 
     const unsubscribe = () => {
-      dedupeSet.delete(hash);
-      if (subscribing) {
+      dedupeSet.delete(__hash);
+      if (subscriptions.has(__hash)) {
+        subscriptions.delete(__hash);
         console.log("Unsub:", req[2]);
         pool.send(JSON.stringify(makeMessageClose(req[1])));
       }
@@ -69,7 +87,7 @@ export function useNostrSubscription({
         eoseCount++;
         if (eoseCount >= pool.count) {
           db.queryCache.put({
-            key: hash,
+            key: __hash,
             fetchedAt: Date.now(),
           });
           if (unsubscribeOnEose) {
@@ -82,6 +100,7 @@ export function useNostrSubscription({
     pool.addEventListener("message", handleMessage);
 
     return () => {
+      if (timeout.current) window.clearTimeout(timeout.current);
       pool.removeEventListener("message", handleMessage);
       unsubscribe();
     };

@@ -3,6 +3,8 @@
 import "@camome/system/dist/theme.css";
 import "./globals.scss";
 
+import LogInScreen from "@/app/LogInScreen";
+
 export default function RootLayout({
   children,
 }: {
@@ -11,7 +13,9 @@ export default function RootLayout({
   return (
     <html lang="en" data-theme="light">
       <head />
-      <body>{children}</body>
+      <body>
+        <LogInScreen>{children}</LogInScreen>
+      </body>
     </html>
   );
 }

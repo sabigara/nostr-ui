@@ -16,7 +16,7 @@ type FormValues = {
 };
 
 export default function RelayConnector({ defaultUrl }: Props) {
-  const [url, setUrl] = React.useState("");
+  const [url, setUrl] = React.useState(defaultUrl ?? "");
   const { readyState } = useWsPoolConnection(url, { log: true });
 
   const { register, handleSubmit } = useForm<FormValues>({
@@ -25,7 +25,8 @@ export default function RelayConnector({ defaultUrl }: Props) {
     },
   });
   const onSubmit: Parameters<typeof handleSubmit>[0] = ({ url }) => {
-    setUrl(url);
+    setUrl("");
+    window.setTimeout(() => void setUrl(url), 0);
   };
 
   const buttonProps = React.useMemo<Partial<Omit<ButtonProps, "ref">>>(() => {
@@ -41,7 +42,6 @@ export default function RelayConnector({ defaultUrl }: Props) {
           colorScheme: "primary",
           startDecorator: <Spinner size="sm" />,
           disabled: true,
-          // children: "Connecting",
         };
       }
       case WebSocket.OPEN: {
@@ -55,7 +55,6 @@ export default function RelayConnector({ defaultUrl }: Props) {
           colorScheme: "danger",
           startDecorator: <Spinner size="sm" />,
           disabled: true,
-          // children: "Disconnecting",
         };
       }
       case WebSocket.CLOSED: {
