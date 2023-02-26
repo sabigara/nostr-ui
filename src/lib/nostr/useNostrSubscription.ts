@@ -3,9 +3,9 @@ import { Filter, MessageTypeToClient } from "@/lib/nostr/types";
 import { useWsPool } from "@/lib/websocket/store";
 import objectHash from "object-hash";
 import React from "react";
+import { useLiveQuery } from "dexie-react-hooks";
 import { queryEventsFromStorage } from "@/lib/nostr/event/storage";
 import { db } from "@/lib/storage/indexedDB";
-import { useQuery } from "@tanstack/react-query";
 
 const dedupeSet = new Set<string>();
 const subscriptions = new Set<string>();
@@ -26,9 +26,10 @@ export function useNostrSubscription({
   const pool = useWsPool();
   const hash = objectHash(filters);
   const serialized = JSON.stringify(filters);
-  const { data } = useQuery(["events", filters], () => {
-    return queryEventsFromStorage(...filters);
-  });
+  const events = useLiveQuery(() => {
+    const parsed = JSON.parse(serialized);
+    return queryEventsFromStorage(...parsed);
+  }, [serialized]);
   const timeout = React.useRef<number>();
 
   React.useEffect(() => {
@@ -105,5 +106,5 @@ export function useNostrSubscription({
     };
   }, [serialized, pool, hash, unsubscribeOnEose, staleSeconds, enabled]);
 
-  return data;
+  return events;
 }

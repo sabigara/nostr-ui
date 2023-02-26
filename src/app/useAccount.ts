@@ -1,9 +1,9 @@
 import { db } from "@/lib/storage/indexedDB";
-import { useQuery } from "@tanstack/react-query";
+import { useLiveQuery } from "dexie-react-hooks";
 
 export function useAccount() {
-  const { data } = useQuery(["account"], () => {
+  const account = useLiveQuery(() => {
     return db.account.toCollection().first();
   });
-  return data;
+  return account;
 }
