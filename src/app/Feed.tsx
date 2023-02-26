@@ -33,7 +33,7 @@ export default function Feed({ authors, className }: Props) {
     <ul className={clsx(styles.list, className)}>
       {/* TODO: should sort inside queryFn? */}
       {notes?.map((note) => (
-        <Note author={note.pubkey} content={note.content} key={note.id} />
+        <Note note={note} key={note.id} />
       ))}
     </ul>
   );
