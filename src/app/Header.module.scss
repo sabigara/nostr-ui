@@ -1,0 +1,15 @@
+.container {
+  border-bottom: 1px solid var(--cmm-color-border-base);
+  height: 3.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  background: var(--cmm-color-surface-0);
+}
+
+.logo {
+  font-weight: var(--cmm-font-weight-bold);
+  font-size: var(--cmm-font-size-xl);
+}

@@ -4,8 +4,10 @@ specifiers:
   '@camome/core': ^0.0.28
   '@camome/system': ^0.1.23
   '@camome/utils': ^0.1.10
+  '@headlessui/react': ^1.7.12
   '@next/font': 13.1.6
   '@swc-jotai/react-refresh': ^0.0.4
+  '@tabler/icons-react': ^2.5.0
   '@types/lodash.uniqby': ^4.7.7
   '@types/node': 18.13.0
   '@types/object-hash': ^3.0.2
@@ -37,7 +39,9 @@ dependencies:
   '@camome/core': 0.0.28_react@18.2.0
   '@camome/system': 0.1.23
   '@camome/utils': 0.1.10
+  '@headlessui/react': 1.7.12_biqbaboplfbrettd7655fr4n2y
   '@next/font': 13.1.6
+  '@tabler/icons-react': 2.5.0_react@18.2.0
   '@types/node': 18.13.0
   '@types/react': 18.0.27
   '@types/react-dom': 18.0.10
@@ -347,6 +351,18 @@ packages:
       - supports-color
     dev: false
 
+  /@headlessui/react/1.7.12_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-FhSx5V+Qp0GvbTpaxyS+ymGDDNntCacClWsk/d8Upbr19g3AsPbjfPk4+m2CgJGcuCB5Dz7LpUIOAbvQTyjL2g==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      react: ^16 || ^17 || ^18
+      react-dom: ^16 || ^17 || ^18
+    dependencies:
+      client-only: 0.0.1
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    dev: false
+
   /@heroicons/react/2.0.14_react@18.2.0:
     resolution: {integrity: sha512-eFL4if6L7woL1fUvk/jjXx4z9NxVESHHrQnEd2qKVelTFTIr/3VLGWdPb0biia9ZVe26P0JSs/xmOlRNur3SrQ==}
     peerDependencies:
@@ -551,6 +567,20 @@ packages:
     resolution: {integrity: sha512-4C7nX/dvpzB7za4Ql9K81xK3HPxCpHMgwTZVyf+9JQ6VUbn9jjZVN7/Nkdz/Ugzs2CSjqnL/UPXroiVBVHUWUw==}
     dependencies:
       tslib: 2.5.0
+    dev: false
+
+  /@tabler/icons-react/2.5.0_react@18.2.0:
+    resolution: {integrity: sha512-RP5gOEis5QPArMkAuOomMEvT4+nDWF2CBNv2SCGVYFC8mXEz5tYzjPoaBQDpyWO7vB6IeJvvk7feOaLBvD2zRA==}
+    peerDependencies:
+      react: ^16.5.1 || ^17.0.0 || ^18.0.0
+    dependencies:
+      '@tabler/icons': 2.5.0
+      prop-types: 15.8.1
+      react: 18.2.0
+    dev: false
+
+  /@tabler/icons/2.5.0:
+    resolution: {integrity: sha512-gQceaW6itR2Wna2Kqcrxz3gm2cNxwg/DCgT17W1N9la4Iri1r9g681uO2LryDskGXfs71Trhd3CtrED/T6dzUQ==}
     dev: false
 
   /@types/json5/0.0.29:

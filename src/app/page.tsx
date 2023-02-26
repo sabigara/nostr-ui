@@ -26,7 +26,6 @@ export default function Home() {
 
   return (
     <main className={clsx(styles.main, "stack")}>
-      <RelayPanel maxRelays={3} />
       <Feed authors={following} />
     </main>
   );
