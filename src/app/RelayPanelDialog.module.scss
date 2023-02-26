@@ -1,3 +1,15 @@
 .content {
   padding-top: 1rem;
 }
+
+.button {
+  position: relative;
+  width: fit-content;
+  padding-inline: 0.2em;
+}
+
+.count {
+  font-size: 0.95em;
+  margin-inline-end: 0.2em;
+  margin-block-start: 0.2em;
+}

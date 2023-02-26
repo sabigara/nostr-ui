@@ -4,5 +4,6 @@ export type WsPool = {
   removeEventListener: WebSocket["removeEventListener"];
   registry: Record<string, WebSocket>;
   count: number;
+  openCount: number;
   get: (url: string) => WebSocket | undefined;
 };

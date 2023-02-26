@@ -23,6 +23,9 @@ export const atomWsPool = atom<WsPool>((get) => ({
   },
   registry: get(atomWsPoolRegistry),
   count: Object.keys(get(atomWsPoolRegistry)).length,
+  openCount: Object.values(get(atomWsPoolRegistry)).filter(
+    (ws) => ws.readyState === WebSocket.OPEN
+  ).length,
   get: () => undefined,
 }));
 export const useWsPool = () => useAtomValue(atomWsPool);

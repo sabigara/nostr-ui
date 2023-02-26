@@ -5,9 +5,12 @@ import React from "react";
 import { IconAffiliate } from "@tabler/icons-react";
 
 import styles from "./RelayPanelDialog.module.scss";
+import { useAtomValue } from "jotai";
+import { atomWsPool } from "@/lib/websocket/store";
 
 export default function RelayPanelDialog() {
   const [open, setOpen] = React.useState(false);
+  const pool = useAtomValue(atomWsPool);
   return (
     <>
       <IconButton
@@ -15,7 +18,9 @@ export default function RelayPanelDialog() {
         onClick={() => setOpen(true)}
         variant="ghost"
         size="sm"
+        className={styles.button}
       >
+        <span className={styles.count}>{pool.openCount}</span>
         <IconAffiliate size="sm" />
       </IconButton>
       <Dialog title="Relays" open={open} setOpen={setOpen} unmount={false}>
