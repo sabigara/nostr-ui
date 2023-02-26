@@ -28,7 +28,8 @@ export default function Note({ note }: Props) {
       </div>
       <div className={styles.right}>
         <div className={styles.header}>
-          <span className={styles.name}>{meta?.name}</span>
+          <span className={styles.displayName}>{meta?.display_name}</span>
+          <span className={styles.name}>@{meta?.name}</span>
           <time
             dateTime={new Date(note.created_at).toISOString()}
             className={styles.time}

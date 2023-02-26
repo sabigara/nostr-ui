@@ -59,6 +59,7 @@ export type Filter = {
 
 export type Metadata = {
   name: string;
+  display_name: string;
   about: string;
   picture: string;
 };
